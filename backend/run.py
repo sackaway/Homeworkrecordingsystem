@@ -8,7 +8,16 @@ UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'upload
 
 def create_app():
     app = Flask(__name__)
-    CORS(app, supports_credentials=True)  # Allow cookies/session from React
+    
+    # Allow Vercel origin for cross-site requests with credentials
+    CORS(app, supports_credentials=True, origins=[
+        "https://homeworkrecordingsystem.vercel.app",
+        "http://localhost:5173"
+    ])
+
+    # Production Cookie Settings (Required for Vercel -> PythonAnywhere)
+    app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+    app.config['SESSION_COOKIE_SECURE'] = True
 
     # Load config from .env via app/config.py
     app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
